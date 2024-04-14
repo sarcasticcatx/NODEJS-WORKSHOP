@@ -1,0 +1,31 @@
+export class ProductsService {
+    //get all
+    static async getAllProducts(filter = {}) {
+
+        const { stock, descriptionFilter, titleFilter, categoryFilter, sortByPrice, ...basicFilters } = filter;
+    
+        let sortFilters = {}; //aka query 
+    
+        // Combine all conditions into a single sortFilters 
+        if (descriptionFilter) { //check if its truthy then add text to the query object 
+          sortFilters.$text = { $search: descriptionFilter }; //and then we search for the value of description
+        }
+    
+        if (titleFilter) { // it adds title property to the query object which uses the in operator 
+    
+          sortFilters.title = { $in: titleFilter }; // to match vrednosta vo title filterot so title field u bazata
+        }
+    
+        if (categoryFilter) { //isto i ova go stava category property vo queary objektot za da se matchne so 
+         
+          sortFilters.category = { $in: categoryFilter }; //vrednosta vo category fieldot u bazata
+        }
+    
+    
+        if (stock !== undefined) { // ova proveruva dali ne e undefined , ako e pogolem ili ednakov na 1
+          if (stock >= 1) { // stava stock propery na query objektot so greatthenequal operatorot .
+            sortFilters.stock = { $gte: Number(stock) }; //ako e pomal od 1 tstava so lessthen operatorot. 
+          } else if (stock < 1) {
+            sortFilters.stock = { $lt: 1 }; //ova kje gi filterne produktite based on their stock status
+          }
+        }
