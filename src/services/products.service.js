@@ -31,29 +31,26 @@ export class ProductsService {
             sortFilters.stock = { $lt: 1 }; 
           }
         }
-        let sortingHat = {}; 
+        let sorting = {}; 
 
-        if (sortByPrice) {
-            if (sortByPrice === "asc") {
-                sortingHat.price = 1;
-            } else if (sortByPrice === "desc") {
-                sortingHat.price = -1;
+         if (sortByPrice) {
+            if (sortByPrice === "asc") 
+                sorting.price = 1;
+            if (sortByPrice === "desc") {
+                sorting.price = -1;
             }
         }
         if (basicFilters.price) basicFilters.price = { $gte: Number(basicFilters.price)};
 
         const allFilters = { ...sortFilters, ...basicFilters };
 
-        const products = await Products.find(allFilters).sort(sortingHat);
+        const products = await Products.find(allFilters).sort(sorting);
     
         console.log(`getAllProducts`);
 
         return products; 
 
              }
-            
-          
-
     //get by id
     static async getProductById(productId) {
        
